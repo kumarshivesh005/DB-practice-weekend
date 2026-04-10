@@ -8,7 +8,6 @@ buildings[icon:building,color:blue]{
 
 floors[icon:flowchart,color:blue]{
   floor_id SERIAL PK
-  numberof_floor INT
   building_id INT FK
 }
 
@@ -49,7 +48,6 @@ trips[icon:train]{
   elevator_id INT FK
   floorrequest_id INT FK
   elevatorstatus_id INT FK
-  numberof_trip INT
   started_at timestamp
   ended_at timestamp
 }
@@ -57,17 +55,19 @@ trips[icon:train]{
 
 elevatorstatuses[icon: stream]{
   elevatorstatus_id SERIAL PK
-  maintaince_id INT FK
-  is_working BOOLEAN
+  elevator_id INT FK
+  status VARCHAR(30)
+  recorded_at timestamp
 }
 
 
 maintainces[icon:timer]{
   maintaince_id SERIAL PK
   elevator_id INT FK
-  
   maintainced_at timestamp
 }
+
+
 // b-me
 buildings.building_id <elevators.building_id
 
@@ -78,7 +78,7 @@ buildings.building_id <floors.building_id
 buildings.building_id <elevatorshafts.building_id
 
 // f-me
-floors.floor_id <elevators.floor_id
+floors.floor_id <>elevators.floor_id
 // f-mfr
 floors.floor_id <floorrequests.floor_id
 
@@ -90,15 +90,17 @@ elevatorshafts.elevatorshaft_id -maintainces.elevatorshaft_id
 
 
 // e-mfr
-elevators.elevator_id <floorrequests.elevator_id
+elevators.elevator_id <>floorrequests.elevator_id
 
 // fr-mt
 floorrequests.floorrequest_id <trips.floorrequest_id
 // e-mt
 elevators.elevator_id <trips.elevator_id
 
-// est-mt
-elevatorstatuses.elevatorstatus_id < trips.elevatorstatus_id
+// 1e=mes
+elevators.elevator_id <elevatorstatuses.elevator_id
+
+
 
 // m-1e
 elevators.elevator_id - maintainces.elevator_id
